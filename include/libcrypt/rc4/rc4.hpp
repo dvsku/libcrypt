@@ -51,48 +51,39 @@ namespace libcrypt {
 
         // Preforms encryption on the input file and saves the encrypted data to
         // the output file.
-        // Encryption is skipped if file is encrypted.
         // If output is empty, result will be saved to input.
         crypt_result encrypt_file(const file_path_t& input, const file_path_t& output = "");
 
         // Preforms encryption on the input file and saves the encrypted data to
         // the out buffer.
-        // Encryption is skipped if file is encrypted.
         crypt_result encrypt_file(const file_path_t& input, buffer_t& out);
 
         // Preforms encryption on the buffer.
-        // Encryption is skipped if data is encrypted.
         // Buffer content and size will be modified.
         crypt_result encrypt_buffer(buffer_t& buffer);
 
-        // Preforms encryption on the buffer. Data is replaced with encrypted data
-        // if encryption was successful.
-        // DOESN'T add magic.
+        // Preforms encryption on the data.
+        // Data is replaced with encrypted data.
         // Offset is offset from start of stream.
         // Call reset() after you finish encrypting.
         crypt_result encrypt_stream(uint8_t* ptr, size_t size, size_t offset);
 
         // Preforms decryption on the input file and saves the data to
         // the output file.
-        // Decryption is skipped if file is not encrypted.
         // If output is empty, result will be saved to input.
         crypt_result decrypt_file(const file_path_t& input, const file_path_t& output = "");
 
         // Preforms decryption on the input file and saves the data to
         // the out buffer.
-        // Decryption is skipped if file is not encrypted.
         crypt_result decrypt_file(const file_path_t& input, buffer_t& out);
 
         // Preforms decryption on the buffer.
-        // Decryption is skipped if file is not encrypted.
         // Buffer content and size will be modified.
         crypt_result decrypt_buffer(buffer_t& buffer);
 
-        // Remark: Assumes the buffer is encrypted! Only use on encrypted buffers!
-        // Preforms decryption on the buffer. Buffer data is replaced with decrypted data
-        // if decryption was successful.
-        // Use when you know for sure that data is encrypted and DOESN'T contain magic!
-        // Offset is offset from start of encrypted stream.
+        // Preforms decryption on the data.
+        // Data is replaced with decrypted data.
+        // Offset is offset from start of stream.
         // Call reset() after you finish decrypting.
         crypt_result decrypt_stream(uint8_t* ptr, size_t size, size_t offset);
 

@@ -8,18 +8,13 @@ using namespace libcrypt;
 ///////////////////////////////////////////////////////////////////////////////
 // INTERNAL
 
-static const uint32_t KEY_FILE_MAGIC   = 0x20464B44;
-static const uint32_t ENCRYPTION_MAGIC = 0x4B535644;
+static const uint32_t KEY_FILE_MAGIC = 0x20464B44;
 
 static std::string internal_parse_key(const char* key, size_t size);
 static std::string internal_hex_string_to_string(const std::string& hex_string);
 
 static void internal_swap(uint8_t* buffer, uint32_t i, uint32_t j);
 static crypt_result internal_write(std::filesystem::path& output, const rc4::buffer_t& buffer);
-
-static bool internal_has_magic(const rc4::buffer_t& buffer);
-static void internal_write_magic(rc4::buffer_t& buffer);
-static void internal_remove_magic(rc4::buffer_t& buffer);
 
 ///////////////////////////////////////////////////////////////////////////////
 // PUBLIC
@@ -175,21 +170,7 @@ crypt_result rc4::encrypt_file(const file_path_t& input, buffer_t& out) {
 }
 
 crypt_result rc4::encrypt_buffer(buffer_t& buffer) {
-    crypt_result result;
-
-    if (internal_has_magic(buffer)) {
-        result.message = "Buffer is already encrypted.";
-        return result;
-    }
-
-    result = crypt(buffer);
-    if (!result)
-        return result;
-
-    internal_write_magic(buffer);
-
-    result.success = true;
-    return result;
+    return crypt(buffer);
 }
 
 crypt_result rc4::encrypt_stream(uint8_t* ptr, size_t size, size_t offset) {
@@ -236,14 +217,6 @@ crypt_result rc4::decrypt_file(const file_path_t& input, buffer_t& out) {
 }
 
 crypt_result rc4::decrypt_buffer(buffer_t& buffer) {
-    crypt_result result;
-
-    if (!internal_has_magic(buffer)) {
-        result.message = "Not encrypted.";
-        return result;
-    }
-
-    internal_remove_magic(buffer);
     return crypt(buffer);
 }
 
@@ -367,29 +340,4 @@ crypt_result internal_write(std::filesystem::path& output, const rc4::buffer_t& 
 
     result.success = true;
     return result;
-}
-
-bool internal_has_magic(const rc4::buffer_t& buffer) {
-    if (buffer.size() < 4)
-        return false;
-
-    uint32_t magic = 0;
-    std::memcpy(&magic, buffer.data(), 4);
-
-    return magic == ENCRYPTION_MAGIC;
-}
-
-void internal_write_magic(rc4::buffer_t& buffer) {
-    if (internal_has_magic(buffer)) return;
-
-    buffer.resize(buffer.size() + 4);
-    std::memmove(buffer.data() + 4, buffer.data(), buffer.size() - 4);
-    std::memcpy(buffer.data(), &ENCRYPTION_MAGIC, 4);
-}
-
-void internal_remove_magic(rc4::buffer_t& buffer) {
-    if (!internal_has_magic(buffer)) return;
-
-    std::memmove(buffer.data(), buffer.data() + 4, buffer.size() - 4);
-    buffer.resize(buffer.size() - 4);
 }
