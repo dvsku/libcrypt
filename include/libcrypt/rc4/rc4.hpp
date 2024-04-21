@@ -18,50 +18,32 @@ namespace libcrypt {
         rc4& operator=(rc4&&)      = delete;
 
     public:
-        /// <summary>
-        /// Reset internal state for a new encryption/decryption pass.
-        /// Doesn't reset key and iv.
-        /// </summary>
+        // Reset internal state for a new encryption/decryption pass.
+        // Doesn't reset key and iv.
         void reset();
 
-        /// <summary>
-        /// Set key
-        /// </summary>
+        // Set key
         void set_key(const char* key, size_t size);
 
-        /// <summary>
-        /// Set key
-        /// </summary>
+        // Set key
         void set_key(const std::string& key);
 
-        /// <summary>
-        /// Set iv
-        /// </summary>
+        // Set iv
         void set_iv(uint8_t iv);
 
-        /// <summary>
-        /// Set key and iv via key file
-        /// </summary>
+        // Set key and iv via key file
         crypt_result set_via_key_file(const file_path_t& file);
 
-        /// <summary>
-        /// Get current key
-        /// </summary>
+        // Get current key
         const std::string& get_key() const;
 
-        /// <summary>
-        /// Get current iv
-        /// </summary>
+        // Get current iv
         uint8_t get_iv() const;
 
-        /// <summary>
-        /// Check if a file is a rc4 key file
-        /// </summary>
+        // Check if a file is a rc4 key file
         bool is_key_file(const file_path_t& file);
 
-        /// <summary>
-        /// Create a key file
-        /// </summary>
+        // Create a key file
         crypt_result create_key_file(const file_path_t& file, const std::string& key, uint8_t iv);
 
     private:
