@@ -34,20 +34,11 @@ namespace libcrypt {
         // Set iv
         void set_iv(uint8_t iv);
 
-        // Set key and iv via key file
-        crypt_result set_via_key_file(const file_path_t& file);
-
         // Get current key
         const std::string& get_key() const;
 
         // Get current iv
         uint8_t get_iv() const;
-
-        // Check if a file is a rc4 key file
-        bool is_key_file(const file_path_t& file);
-
-        // Create a key file
-        crypt_result create_key_file(const file_path_t& file, const std::string& key, uint8_t iv);
 
         // Preforms encryption on the input file and saves the encrypted data to
         // the output file.
