@@ -11,3 +11,9 @@ ADD_EXECUTABLE(test_md5
 )
 
 gtest_discover_tests(test_md5)
+
+ADD_EXECUTABLE(test_rc4
+	"test_rc4.cpp"
+)
+
+gtest_discover_tests(test_rc4)
