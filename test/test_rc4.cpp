@@ -108,3 +108,25 @@ TEST(rc4, buffer_encrypt_decrypt_fail_wrong_key) {
 
     EXPECT_FALSE(compare_buffers(v1, v2));
 }
+
+TEST(rc4, buffer_encrypt_decrypt_stream_ok) {
+    rc4 rc4;
+
+    std::vector<uint8_t> v1{
+        0x03, 0x48, 0xA7, 0x8, 0x54, 0xBA, 0x99, 0xF7, 0x73, 0x11
+    };
+    std::vector<uint8_t> v2 = v1;
+
+    rc4.set_key("testing");
+    rc4.set_iv(91);
+
+    rc4.encrypt_stream(&v2[0], 5, 0);
+    rc4.encrypt_stream(&v2[5], 5, 5);
+    rc4.reset();
+
+    rc4.decrypt_stream(&v2[0], 5, 0);
+    rc4.decrypt_stream(&v2[5], 5, 5);
+    rc4.reset();
+
+    EXPECT_TRUE(compare_buffers(v1, v2));
+}
