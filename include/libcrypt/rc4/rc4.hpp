@@ -2,8 +2,13 @@
 
 #include "libcrypt/misc/crypt_result.hpp"
 
+#include <filesystem>
+
 namespace libcrypt {
     class rc4 {
+    public:
+        using file_path_t = std::filesystem::path;
+
     public:
         rc4();
         rc4(const rc4&) = delete;
@@ -35,6 +40,11 @@ namespace libcrypt {
         void set_iv(uint8_t iv);
 
         /// <summary>
+        /// Set key and iv via key file
+        /// </summary>
+        crypt_result set_via_key_file(const file_path_t& file);
+
+        /// <summary>
         /// Get current key
         /// </summary>
         const std::string& get_key() const;
@@ -43,6 +53,16 @@ namespace libcrypt {
         /// Get current iv
         /// </summary>
         uint8_t get_iv() const;
+
+        /// <summary>
+        /// Check if a file is a rc4 key file
+        /// </summary>
+        bool is_key_file(const file_path_t& file);
+
+        /// <summary>
+        /// Create a key file
+        /// </summary>
+        crypt_result create_key_file(const file_path_t& file, const std::string& key, uint8_t iv);
 
     private:
         bool        m_initialized;
