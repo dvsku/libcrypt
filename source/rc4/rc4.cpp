@@ -8,7 +8,7 @@ using namespace libcrypt;
 ///////////////////////////////////////////////////////////////////////////////
 // INTERNAL
 
-static const uint32_t MAGIC = 0x20464B44;
+static const uint32_t KEY_FILE_MAGIC   = 0x20464B44;
 
 static std::string internal_parse_key(const char* key, size_t size);
 static std::string internal_hex_string_to_string(const std::string& hex_string);
@@ -101,7 +101,7 @@ bool rc4::is_key_file(const file_path_t& file) {
     uint32_t magic = 0U;
     fin.read((char*)&magic, sizeof(magic));
 
-    return magic == MAGIC;
+    return magic == KEY_FILE_MAGIC;
 }
 
 crypt_result rc4::create_key_file(const file_path_t& file, const std::string& key, uint8_t iv) {
@@ -122,10 +122,10 @@ crypt_result rc4::create_key_file(const file_path_t& file, const std::string& ke
         return result;
     }
 
-    fout.write((char*)&MAGIC,       sizeof(MAGIC));
-    fout.write((char*)&iv,          sizeof(iv));
-    fout.write((char*)&l_key_size,  sizeof(l_key_size));
-    fout.write((char*)l_key.data(), l_key_size);
+    fout.write((char*)&KEY_FILE_MAGIC, sizeof(KEY_FILE_MAGIC));
+    fout.write((char*)&iv,             sizeof(iv));
+    fout.write((char*)&l_key_size,     sizeof(l_key_size));
+    fout.write((char*)l_key.data(),    l_key_size);
     fout.close();
 
     result.success = true;
