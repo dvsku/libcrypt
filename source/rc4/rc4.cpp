@@ -192,6 +192,10 @@ crypt_result rc4::encrypt_buffer(buffer_t& buffer) {
     return result;
 }
 
+crypt_result rc4::encrypt_stream(uint8_t* ptr, size_t size, size_t offset) {
+    return crypt(ptr, size, offset, true);
+}
+
 crypt_result rc4::decrypt_file(const file_path_t& input, const file_path_t& output) {
     buffer_t buffer;
 
@@ -241,6 +245,10 @@ crypt_result rc4::decrypt_buffer(buffer_t& buffer) {
 
     internal_remove_magic(buffer);
     return crypt(buffer);
+}
+
+crypt_result rc4::decrypt_stream(uint8_t* ptr, size_t size, size_t offset) {
+    return crypt(ptr, size, offset, true);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

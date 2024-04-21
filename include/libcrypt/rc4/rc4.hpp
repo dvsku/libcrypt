@@ -65,6 +65,13 @@ namespace libcrypt {
         // Buffer content and size will be modified.
         crypt_result encrypt_buffer(buffer_t& buffer);
 
+        // Preforms encryption on the buffer. Data is replaced with encrypted data
+        // if encryption was successful.
+        // DOESN'T add magic.
+        // Offset is offset from start of stream.
+        // Call reset() after you finish encrypting.
+        crypt_result encrypt_stream(uint8_t* ptr, size_t size, size_t offset);
+
         // Preforms decryption on the input file and saves the data to
         // the output file.
         // Decryption is skipped if file is not encrypted.
@@ -80,6 +87,14 @@ namespace libcrypt {
         // Decryption is skipped if file is not encrypted.
         // Buffer content and size will be modified.
         crypt_result decrypt_buffer(buffer_t& buffer);
+
+        // Remark: Assumes the buffer is encrypted! Only use on encrypted buffers!
+        // Preforms decryption on the buffer. Buffer data is replaced with decrypted data
+        // if decryption was successful.
+        // Use when you know for sure that data is encrypted and DOESN'T contain magic!
+        // Offset is offset from start of encrypted stream.
+        // Call reset() after you finish decrypting.
+        crypt_result decrypt_stream(uint8_t* ptr, size_t size, size_t offset);
 
     private:
         bool        m_initialized;
